@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maaf yaa apingg 🙏</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background: linear-gradient(135deg,#fdf6ec,#f8e1f4,#e6e6fa);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    overflow:hidden;
+}
+
+/* GLASS CARD */
+.card{
+    width:100%;
+    max-width:600px;
+    background:rgba(255,255,255,0.25);
+    backdrop-filter:blur(18px);
+    border-radius:25px;
+    padding:40px 30px;
+    text-align:center;
+    box-shadow:0 10px 40px rgba(0,0,0,0.1);
+    animation:fadeIn 1s ease;
+    position:relative;
+    z-index:2;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+h1{ font-size:1.8rem; margin-bottom:15px; color:#5a4e6b; }
+p{ color:#5d5566; }
+
+input{
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    margin-top:15px;
+    text-align:center;
+    width:80px;
+}
+
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:25px;
+    margin-top:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn-main{ background:#ffcad4; }
+.btn-main:hover{ background:#f4a9b8; }
+
+.buttons{ margin-top:20px; }
+.yes{ background:#ffcad4; }
+.no{ background:#d8c4f4; }
+
+.spotify{
+    margin:20px 0;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 0 25px rgba(255,182,193,0.6);
+}
+
+.typing{ min-height:60px; margin-top:15px; }
+.hidden{ display:none; }
+
+/* FLOATING EMOJI 🙏 */
+.float-bg{
+    position:fixed;
+    bottom:-30px;
+    font-size:20px;
+    animation:floatUp 8s linear infinite;
+    opacity:0.6;
+    z-index:1;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(0) scale(1);}
+    100%{transform:translateY(-120vh) scale(1.3); opacity:0;}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MINI GAME -->
+<div class="card" id="gameCard">
+    <h1>Mini Game Dulu 🤗</h1>
+    <p>Jawab yang benar biar bisa lanjut yaa apingg 😅</p>
+    <h2 id="question"></h2>
+    <input type="number" id="answer">
+    <br>
+    <button class="btn-main" onclick="checkAnswer()">Submit</button>
+    <p id="gameMsg"></p>
+</div>
+
+<!-- UCAPAN -->
+<div class="card hidden" id="mainCard">
+    <h1>Maapin aku yaa, apingg🙏</h1>
+
+    <p>
+    Aku benar-benar gaa bermaksud bikin kmu kecewa.apalagi sampe ngatain kmuu, Maapin aku yaa, yukk kita belajar bahasa gen z lagii, aku senang tauu belajar sma kmuu.Sumpah belajar bahasa gen z seru bangett apingg,apalagi gurunya kamuu🤸‍♂️
+    </p>
+
+    <div class="typing" id="typing"></div>
+
+    <!-- <div class="spotify">
+        <iframe style="border-radius:20px"
+        src="https://open.spotify.com/embed/track/4uLU6hMCjMI75M1A2tKUQC?autoplay=1"
+        width="100%" height="100"
+        frameBorder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+        </iframe>
+    </div> -->
+
+    <p><b>Kamu bersedia maapin aku gaa kanjeng ratu apingg? pencet salah satu tombol dibawah ini!!</b></p>
+
+    <div class="buttons">
+        <button class="yes" onclick="yesClick()">Yaa 🥺</button>
+        <button class="no" id="noBtn">Gaa 😤</button>
+    </div>
+
+    <p id="result"></p>
+</div>
+
+<script>
+
+/* FLOATING EMOJI BACKGROUND 🙏 */
+setInterval(()=>{
+    let el=document.createElement("div");
+    el.innerHTML="🙏";
+    el.classList.add("float-bg");
+    el.style.left=Math.random()*100+"vw";
+    el.style.fontSize=(Math.random()*15+15)+"px";
+    document.body.appendChild(el);
+    setTimeout(()=>{el.remove();},8000);
+},800);
+
+
+/* MINI GAME */
+let num1=Math.floor(Math.random()*20)+1;
+let num2=Math.floor(Math.random()*20)+1;
+document.getElementById("question").innerText=num1+" + "+num2+" = ?";
+
+function checkAnswer(){
+    let userAnswer=parseInt(document.getElementById("answer").value);
+    if(userAnswer===num1+num2){
+        document.getElementById("gameMsg").innerHTML="Yeaayy bener 🎉";
+        setTimeout(()=>{
+            document.getElementById("gameCard").classList.add("hidden");
+            document.getElementById("mainCard").classList.remove("hidden");
+            startTyping();
+        },1000);
+    }else{
+        document.getElementById("gameMsg").innerHTML="Ihh salahh 😤 coba lagi!";
+        playErrorSound();
+    }
+}
+
+/* SOUND ERROR */
+function playErrorSound(){
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    osc.type="sawtooth";
+    osc.frequency.setValueAtTime(200,ctx.currentTime);
+    osc.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime+0.2);
+}
+
+/* TYPING (TIDAK DIUBAH) */
+const text="Aku sadar mungkin aku sempat bikin kmu kesel. Tapi aku janji ga bakal ngulangin lagi.🙏";
+let i=0;
+
+function startTyping(){
+    function typing(){
+        if(i<text.length){
+            document.getElementById("typing").innerHTML+=text.charAt(i);
+            i++;
+            setTimeout(typing,40);
+        }
+    }
+    typing();
+}
+
+/* BUTTON GAA */
+let noCount=0;
+const noBtn=document.getElementById("noBtn");
+
+noBtn.addEventListener("click",function(){
+    noCount++;
+    const x=Math.random()*(window.innerWidth-100);
+    const y=Math.random()*(window.innerHeight-50);
+    noBtn.style.position="fixed";
+    noBtn.style.left=x+"px";
+    noBtn.style.top=y+"px";
+
+    if(noCount>=3){
+        alert("Button gaa sedang eror 😖");
+    }
+});
+
+/* BUTTON YAA */
+function yesClick(){
+    document.getElementById("result").innerHTML="Makasih yaa 😆 Kamu memang terbaik kanjeng ratuu apingg! ayoo kita belajar bahasa gen z lagi ngengg 🚗💨 klik link ini yaa kalau masih mau ajarin aku lagi <a href='https://www.instagram.com/shd_qii?igsh=eG1wZDQyMDBoNnBv' target='_blank'>Belajar Bahasa Gen Z</a>";
+    for(let i=0;i<25;i++){
+        let el=document.createElement("div");
+        el.innerHTML="🙏";
+        el.classList.add("float-bg");
+        el.style.left=Math.random()*100+"vw";
+        document.body.appendChild(el);
+        setTimeout(()=>{el.remove();},8000);
+    }
+}
+
+</script>
+
+</body>
+</html>
